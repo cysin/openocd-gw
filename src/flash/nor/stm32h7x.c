@@ -834,6 +834,12 @@ static int stm32x_probe(struct flash_bank *bank)
 		return ERROR_FAIL;
 	}
 
+	if (stm32x_info->idcode == 0x10016480) {
+		// Special case for STM32H7B0VBTx
+		has_dual_bank = true;
+		flash_size_in_kb = 256;
+	}
+
 	if (has_dual_bank) {
 		LOG_INFO("STM32H7 flash has dual banks");
 		if (bank->base != bank1_base && bank->base != bank2_base) {
@@ -845,8 +851,10 @@ static int stm32x_probe(struct flash_bank *bank)
 	} else {
 		LOG_INFO("STM32H7 flash has a single bank");
 		if (bank->base == bank2_base) {
-			LOG_ERROR("this device has a single bank only");
-			return ERROR_FAIL;
+			// LOG_ERROR("this device has a single bank only");
+			// return ERROR_FAIL;
+			LOG_WARNING("the second bank of this device is undocumented");
+			has_dual_bank = true;
 		} else if (bank->base != bank1_base) {
 			LOG_ERROR("STM32H7 flash bank base address config is incorrect. "
 					TARGET_ADDR_FMT " but should be 0x%" PRIx32,

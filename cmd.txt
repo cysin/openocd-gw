@@ -1,0 +1,13 @@
+git clone --recurse-submodules https://github.com/cysin/openocd-gw.git
+
+sudo dnf install libtool
+
+sudo dnf install libusb1-devel
+
+sudo dnf install hidapi-devel
+
+sudo dnf install libftdi-devel
+
+./bootstrap
+
+./configure --prefix=/opt/openocd-git --enable-maintainer-mode --disable-werror --enable-dummy --enable-rshim --enable-ftdi --enable-stlink --enable-ti-icdi --enable-ulink --enable-usb-blaster-2 --enable-ft232r --enable-vsllink --enable-xds110 --enable-cmsis-dap-v2 --enable-osbdm --enable-opendous --enable-armjtagew --enable-rlink --enable-usbprog --enable-esp-usb-jtag --enable-cmsis-dap --enable-nulink --enable-kitprog --enable-usb-blaster --enable-presto --enable-openjtag --enable-buspirate --enable-jlink --enable-parport --disable-parport-ppdev --enable-parport-giveio --enable-jtag_vpi --enable-vdebug --enable-jtag_dpi --enable-amtjtagaccel --enable-bcm2835gpio  --enable-imx_gpio --enable-am335xgpio --enable-ep93xx --enable-at91rm9200 --enable-gw16012 --enable-sysfsgpio --enable-xlnx-pcie-xvc --enable-jimtcl-maintainer --enable-internal-libjaylink --enable-remote-bitbang
