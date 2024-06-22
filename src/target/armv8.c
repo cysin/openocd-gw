@@ -19,6 +19,7 @@
 #include "register.h"
 #include <helper/binarybuffer.h>
 #include <helper/command.h>
+#include <helper/nvp.h>
 
 #include <stdlib.h>
 #include <string.h>
@@ -236,7 +237,7 @@ static int armv8_read_ttbcr(struct target *target)
 		armv8->pa_size = armv8_pa_size((ttbcr_64 >> 32) & 7);
 		armv8->page_size = (ttbcr_64 >> 14) & 3;
 		armv8->armv8_mmu.ttbr1_used = (((ttbcr_64 >> 16) & 0x3F) != 0) ? 1 : 0;
-		armv8->armv8_mmu.ttbr0_mask  = 0x0000FFFFFFFFFFFF;
+		armv8->armv8_mmu.ttbr0_mask  = 0x0000FFFFFFFFFFFFULL;
 		retval += dpm->instr_read_data_r0_64(dpm,
 				ARMV8_MRS(SYSTEM_TTBR0_EL1 | (armv8->armv8_mmu.ttbr1_used), 0),
 				&armv8->ttbr_base);
@@ -942,6 +943,81 @@ int armv8_mmu_translate_va(struct target *target,  target_addr_t va, target_addr
 	return ERROR_OK;
 }
 
+static void armv8_decode_cacheability(int attr)
+{
+	if (attr == 0) {
+		LOG_USER_N("UNPREDICTABLE");
+		return;
+	}
+	if (attr == 4) {
+		LOG_USER_N("Non-cacheable");
+		return;
+	}
+	switch (attr & 0xC) {
+		case 0:
+			LOG_USER_N("Write-Through Transient");
+			break;
+		case 0x4:
+			LOG_USER_N("Write-Back Transient");
+			break;
+		case 0x8:
+			LOG_USER_N("Write-Through Non-transient");
+			break;
+		case 0xC:
+			LOG_USER_N("Write-Back Non-transient");
+			break;
+	}
+	if (attr & 2)
+		LOG_USER_N(" Read-Allocate");
+	else
+		LOG_USER_N(" No-Read Allocate");
+	if (attr & 1)
+		LOG_USER_N(" Write-Allocate");
+	else
+		LOG_USER_N(" No-Write Allocate");
+}
+
+static void armv8_decode_memory_attr(int attr)
+{
+	if (attr == 0x40) {
+		LOG_USER("Normal Memory, Inner Non-cacheable, "
+			 "Outer Non-cacheable, XS=0");
+	} else if (attr == 0xA0) {
+		LOG_USER("Normal Memory, Inner Write-through Cacheable, "
+			 "Outer Write-through Cacheable, Read-Allocate, "
+			 "No-Write Allocate, Non-transient, XS=0");
+	} else if (attr == 0xF0) {
+		LOG_USER("Tagged Normal Memory, Inner Write-Back, "
+			 "Outer Write-Back, Read-Allocate, Write-Allocate, "
+			 "Non-transient");
+	} else if ((attr & 0xF0) == 0) {
+		switch (attr & 0xC) {
+			case 0:
+				LOG_USER_N("Device-nGnRnE Memory");
+				break;
+			case 0x4:
+				LOG_USER_N("Device-nGnRE Memory");
+				break;
+			case 0x8:
+				LOG_USER_N("Device-nGRE Memory");
+				break;
+			case 0xC:
+				LOG_USER_N("Device-GRE Memory");
+				break;
+		}
+		if (attr & 1)
+			LOG_USER(", XS=0");
+		else
+			LOG_USER_N("\n");
+	} else {
+		LOG_USER_N("Normal Memory, Inner ");
+		armv8_decode_cacheability(attr & 0xF);
+		LOG_USER_N(", Outer ");
+		armv8_decode_cacheability(attr >> 4);
+		LOG_USER_N("\n");
+	}
+}
+
 /*  V8 method VA TO PA  */
 int armv8_mmu_translate_va_pa(struct target *target, target_addr_t va,
 	target_addr_t *val, int meminfo)
@@ -963,7 +1039,7 @@ int armv8_mmu_translate_va_pa(struct target *target, target_addr_t va,
 	};
 
 	if (target->state != TARGET_HALTED) {
-		LOG_WARNING("target %s not halted", target_name(target));
+		LOG_TARGET_ERROR(target, "not halted");
 		return ERROR_TARGET_NOT_HALTED;
 	}
 
@@ -1024,11 +1100,9 @@ int armv8_mmu_translate_va_pa(struct target *target, target_addr_t va,
 			int NS = (par >> 9) & 1;
 			int ATTR = (par >> 56) & 0xFF;
 
-			char *memtype = (ATTR & 0xF0) == 0 ? "Device Memory" : "Normal Memory";
-
 			LOG_USER("%sshareable, %s",
 					shared_name[SH], secure_name[NS]);
-			LOG_USER("%s", memtype);
+			armv8_decode_memory_attr(ATTR);
 		}
 	}
 
@@ -1043,7 +1117,7 @@ COMMAND_HANDLER(armv8_handle_exception_catch_command)
 	unsigned int argp = 0;
 	int retval;
 
-	static const struct jim_nvp nvp_ecatch_modes[] = {
+	static const struct nvp nvp_ecatch_modes[] = {
 		{ .name = "off",       .value = 0 },
 		{ .name = "nsec_el1",  .value = (1 << 5) },
 		{ .name = "nsec_el2",  .value = (2 << 5) },
@@ -1053,7 +1127,7 @@ COMMAND_HANDLER(armv8_handle_exception_catch_command)
 		{ .name = "sec_el13",  .value = (5 << 1) },
 		{ .name = NULL, .value = -1 },
 	};
-	const struct jim_nvp *n;
+	const struct nvp *n;
 
 	if (CMD_ARGC == 0) {
 		const char *sec = NULL, *nsec = NULL;
@@ -1063,11 +1137,11 @@ COMMAND_HANDLER(armv8_handle_exception_catch_command)
 		if (retval != ERROR_OK)
 			return retval;
 
-		n = jim_nvp_value2name_simple(nvp_ecatch_modes, edeccr & 0x0f);
+		n = nvp_value2name(nvp_ecatch_modes, edeccr & 0x0f);
 		if (n->name)
 			sec = n->name;
 
-		n = jim_nvp_value2name_simple(nvp_ecatch_modes, edeccr & 0xf0);
+		n = nvp_value2name(nvp_ecatch_modes, edeccr & 0xf0);
 		if (n->name)
 			nsec = n->name;
 
@@ -1081,7 +1155,7 @@ COMMAND_HANDLER(armv8_handle_exception_catch_command)
 	}
 
 	while (argp < CMD_ARGC) {
-		n = jim_nvp_name2value_simple(nvp_ecatch_modes, CMD_ARGV[argp]);
+		n = nvp_name2value(nvp_ecatch_modes, CMD_ARGV[argp]);
 		if (!n->name) {
 			LOG_ERROR("Unknown option: %s", CMD_ARGV[argp]);
 			return ERROR_FAIL;
@@ -1681,7 +1755,7 @@ struct reg_cache *armv8_build_reg_cache(struct target *target)
 			LOG_ERROR("unable to allocate reg type list");
 
 		if (i == ARMV8_PAUTH_CMASK || i == ARMV8_PAUTH_DMASK)
-			reg_list[i].hidden = !armv8->enable_pauth;
+			reg_list[i].exist = armv8->enable_pauth;
 	}
 
 	arm->cpsr = reg_list + ARMV8_XPSR;
@@ -1791,7 +1865,7 @@ const struct command_registration armv8_command_handlers[] = {
 	COMMAND_REGISTRATION_DONE
 };
 
-const char *armv8_get_gdb_arch(struct target *target)
+const char *armv8_get_gdb_arch(const struct target *target)
 {
 	struct arm *arm = target_to_arm(target);
 	return arm->core_state == ARM_STATE_AARCH64 ? "aarch64" : "arm";

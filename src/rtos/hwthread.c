@@ -7,7 +7,6 @@
 #include <helper/time_support.h>
 #include <jtag/jtag.h>
 #include "target/target.h"
-#include "target/target_type.h"
 #include "target/register.h"
 #include <target/smp.h>
 #include "rtos.h"
@@ -31,8 +30,6 @@ static int hwthread_write_buffer(struct rtos *rtos, target_addr_t address,
 		uint32_t size, const uint8_t *buffer);
 
 #define HW_THREAD_NAME_STR_SIZE (32)
-
-extern int rtos_thread_packet(struct connection *connection, const char *packet, int packet_size);
 
 static inline threadid_t threadid_from_target(const struct target *target)
 {

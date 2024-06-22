@@ -21,7 +21,7 @@
 /* To achieve C99 printf compatibility in MinGW, gnu_printf should be
  * used for __attribute__((format( ... ))), with GCC v4.4 or later
  */
-#if (defined(IS_MINGW) && (((__GNUC__ << 16) + __GNUC_MINOR__) >= 0x00040004))
+#if (defined(IS_MINGW) && (((__GNUC__ << 16) + __GNUC_MINOR__) >= 0x00040004)) && !defined(__clang__)
 #define PRINTF_ATTRIBUTE_FORMAT gnu_printf
 #else
 #define PRINTF_ATTRIBUTE_FORMAT printf
@@ -79,6 +79,7 @@ struct command_invocation {
 	const char *name;
 	unsigned argc;
 	const char **argv;
+	Jim_Obj * const *jimtcl_argv;
 	Jim_Obj *output;
 };
 
@@ -153,6 +154,11 @@ void *jimcmd_privdata(Jim_Cmd *cmd);
  * rather than accessing the variable directly.  It may be moved.
  */
 #define CMD_ARGV (cmd->argv)
+/**
+ * Use this macro to access the jimtcl arguments for the command being
+ * handled, rather than accessing the variable directly.  It may be moved.
+ */
+#define CMD_JIMTCL_ARGV (cmd->jimtcl_argv)
 /**
  * Use this macro to access the name of the command being handled,
  * rather than accessing the variable directly.  It may be moved.

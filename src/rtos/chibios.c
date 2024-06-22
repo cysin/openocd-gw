@@ -15,7 +15,6 @@
 #include <helper/time_support.h>
 #include <jtag/jtag.h>
 #include "target/target.h"
-#include "target/target_type.h"
 #include "target/armv7m.h"
 #include "target/cortex_m.h"
 #include "rtos.h"
@@ -80,12 +79,12 @@ struct chibios_params {
 static struct chibios_params chibios_params_list[] = {
 	{
 	"cortex_m",							/* target_name */
-	0,
+	NULL,
 	NULL,									/* stacking_info */
 	},
 	{
 	"hla_target",							/* target_name */
-	0,
+	NULL,
 	NULL,									/* stacking_info */
 	}
 };
@@ -198,7 +197,7 @@ static int chibios_update_memory_signature(struct rtos *rtos)
 errfree:
 	/* Error reading the ChibiOS memory structure */
 	free(signature);
-	param->signature = 0;
+	param->signature = NULL;
 	return -1;
 }
 
@@ -468,9 +467,9 @@ static int chibios_get_thread_reg_list(struct rtos *rtos, int64_t thread_id,
 		return -1;
 
 	/* Update stacking if it can only be determined from runtime information */
-	if ((param->stacking_info == 0) &&
+	if (!param->stacking_info &&
 		(chibios_update_stacking(rtos) != ERROR_OK)) {
-		LOG_ERROR("Failed to determine exact stacking for the target type %s", rtos->target->type->name);
+		LOG_ERROR("Failed to determine exact stacking for the target type %s", target_type_name(rtos->target));
 		return -1;
 	}
 
@@ -518,12 +517,12 @@ static bool chibios_detect_rtos(struct target *target)
 static int chibios_create(struct target *target)
 {
 	for (unsigned int i = 0; i < ARRAY_SIZE(chibios_params_list); i++)
-		if (strcmp(chibios_params_list[i].target_name, target->type->name) == 0) {
+		if (strcmp(chibios_params_list[i].target_name, target_type_name(target)) == 0) {
 			target->rtos->rtos_specific_params = (void *)&chibios_params_list[i];
 			return 0;
 		}
 
 	LOG_WARNING("Could not find target \"%s\" in ChibiOS compatibility "
-				"list", target->type->name);
+				"list", target_type_name(target));
 	return -1;
 }

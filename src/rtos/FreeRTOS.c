@@ -12,7 +12,6 @@
 #include <helper/time_support.h>
 #include <jtag/jtag.h>
 #include "target/target.h"
-#include "target/target_type.h"
 #include "rtos.h"
 #include "helper/log.h"
 #include "helper/types.h"
@@ -312,7 +311,6 @@ static int freertos_update_threads(struct rtos *rtos)
 				(list_elem_ptr != prev_list_elem_ptr) &&
 				(tasks_found < thread_list_size)) {
 			/* Get the location of the thread structure. */
-			rtos->thread_details[tasks_found].threadid = 0;
 			retval = target_read_u32(rtos->target,
 					list_elem_ptr + param->list_elem_content_offset,
 					&pointer_casts_are_bad);
@@ -365,6 +363,7 @@ static int freertos_update_threads(struct rtos *rtos)
 
 			tasks_found++;
 			list_thread_count--;
+			rtos->thread_count = tasks_found;
 
 			prev_list_elem_ptr = list_elem_ptr;
 			list_elem_ptr = 0;
@@ -383,7 +382,6 @@ static int freertos_update_threads(struct rtos *rtos)
 	}
 
 	free(list_of_lists);
-	rtos->thread_count = tasks_found;
 	return 0;
 }
 
@@ -534,7 +532,7 @@ static bool freertos_detect_rtos(struct target *target)
 static int freertos_create(struct target *target)
 {
 	for (unsigned int i = 0; i < ARRAY_SIZE(freertos_params_list); i++)
-		if (strcmp(freertos_params_list[i].target_name, target->type->name) == 0) {
+		if (strcmp(freertos_params_list[i].target_name, target_type_name(target)) == 0) {
 			target->rtos->rtos_specific_params = (void *)&freertos_params_list[i];
 			return 0;
 		}

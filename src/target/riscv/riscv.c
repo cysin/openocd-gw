@@ -1744,7 +1744,7 @@ static int riscv_write_memory(struct target *target, target_addr_t address,
 	return tt->write_memory(target, address, size, count, buffer);
 }
 
-static const char *riscv_get_gdb_arch(struct target *target)
+static const char *riscv_get_gdb_arch(const struct target *target)
 {
 	switch (riscv_xlen(target)) {
 		case 32:
@@ -1830,7 +1830,7 @@ static int riscv_arch_state(struct target *target)
 static int riscv_run_algorithm(struct target *target, int num_mem_params,
 		struct mem_param *mem_params, int num_reg_params,
 		struct reg_param *reg_params, target_addr_t entry_point,
-		target_addr_t exit_point, int timeout_ms, void *arch_info)
+		target_addr_t exit_point, unsigned int timeout_ms, void *arch_info)
 {
 	RISCV_INFO(info);
 
@@ -1840,7 +1840,7 @@ static int riscv_run_algorithm(struct target *target, int num_mem_params,
 	}
 
 	if (target->state != TARGET_HALTED) {
-		LOG_WARNING("target not halted");
+		LOG_TARGET_ERROR(target, "not halted (run target algo)");
 		return ERROR_TARGET_NOT_HALTED;
 	}
 
@@ -2052,7 +2052,7 @@ static int riscv_checksum_memory(struct target *target,
 	buf_set_u64(reg_params[1].value, 0, xlen, count);
 
 	/* 20 second timeout/megabyte */
-	int timeout = 20000 * (1 + (count / (1024 * 1024)));
+	unsigned int timeout = 20000 * (1 + (count / (1024 * 1024)));
 
 	retval = target_run_algorithm(target, 0, NULL, 2, reg_params,
 			crc_algorithm->address,
@@ -2187,7 +2187,6 @@ int riscv_openocd_poll(struct target *target)
 	int halted_hart = -1;
 
 	if (target->smp) {
-		unsigned halts_discovered = 0;
 		unsigned should_remain_halted = 0;
 		unsigned should_resume = 0;
 		struct target_list *list;
@@ -2203,7 +2202,6 @@ int riscv_openocd_poll(struct target *target)
 				t->debug_reason = DBG_REASON_NOTHALTED;
 				break;
 			case RPH_DISCOVERED_HALTED:
-				halts_discovered++;
 				t->state = TARGET_HALTED;
 				enum riscv_halt_reason halt_reason =
 					riscv_halt_reason(t, r->current_hartid);
@@ -3051,6 +3049,9 @@ static const struct command_registration riscv_command_handlers[] = {
 		.usage = "",
 		.chain = semihosting_common_handlers
 	},
+	{
+		.chain = smp_command_handlers
+	},
 	COMMAND_REGISTRATION_DONE
 };
 
@@ -3853,7 +3854,7 @@ int riscv_init_registers(struct target *target)
 		.type = REG_TYPE_ARCH_DEFINED,
 		.id = "FPU_FD",
 		.type_class = REG_TYPE_CLASS_UNION,
-		.reg_type_union = &single_double_union
+		{ .reg_type_union = &single_double_union }
 	};
 	static struct reg_data_type type_uint8 = { .type = REG_TYPE_UINT8, .id = "uint8" };
 	static struct reg_data_type type_uint16 = { .type = REG_TYPE_UINT16, .id = "uint16" };
