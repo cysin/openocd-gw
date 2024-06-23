@@ -1,0 +1,548 @@
+pi@NanoPi-M4:~/work/game-and-watch-retro-go$ make -j8 EXTFLASH_SIZE_MB=12 EXTFLASH_OFFSET=4194304 INTFLASH_BANK=2 GNW_TARGET=zelda  flash
+Entering 'LCD-Game-Emulator'
+Entering 'blueMSX-go'
+Entering 'caprice32-go'
+Entering 'fceumm-go'
+Entering 'gwenesis'
+Entering 'potator'
+Entering 'prosystem-go'
+Entering 'retro-go-stm32'
+Entering 'smw'
+Entering 'tamalib'
+Entering 'zelda3'
+make[1]: Entering directory '/home/pi/work/game-and-watch-retro-go'
+[ BASH ] Checking for updated roms
+/opt/openocd-git/bin/openocd -f scripts/interface_stlink.cfg -c "program build/gw_retro_go_intflash.bin 0x08100000 verify reset exit"
+Open On-Chip Debugger 0.12.0+dev-00616-gc5358c84a-dirty (2024-06-23-16:00)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+Info : The selected transport took over low-level target control. The results might differ compared to plain JTAG/SWD
+none separate
+Info : clock speed 1800 kHz
+Info : STLINK V2J29S7 (API v2) VID:PID 0483:3748
+Info : Target voltage: 3.129153
+Error: [stm32h7x.cpu0] Cortex-M CPUID: 0xa is unrecognized
+Error: [stm32h7x.cpu0] Examination failed
+Warn : target stm32h7x.cpu0 examination failed
+Info : starting gdb server for stm32h7x.cpu0 on 3333
+Info : Listening on port 3333 for gdb connections
+Info : [stm32h7x.cpu0] Cortex-M7 r1p1 processor detected
+Info : [stm32h7x.cpu0] target has 8 breakpoints, 4 watchpoints
+[stm32h7x.cpu0] halted due to debug-request, current mode: Thread 
+xPSR: 0x01000000 pc: 0x0801ad48 msp: 0x2001b620
+** Programming Started **
+Info : Device: STM32H7Ax/7Bx
+Info : flash size probed value 128k
+Info : STM32H7 flash has dual banks
+Info : Bank (0) size is 256 kb, base address is 0x08000000
+Info : Device: STM32H7Ax/7Bx
+Info : flash size probed value 128k
+Info : STM32H7 flash has dual banks
+Info : Bank (1) size is 256 kb, base address is 0x08100000
+Info : Padding image section 0 at 0x08130614 with 12 bytes (bank write end alignment)
+Warn : Adding extra erase range, 0x08130620 .. 0x08131fff
+** Programming Finished **
+** Verify Started **
+** Verified OK **
+** Resetting Target **
+shutdown command invoked
+make[1]: Leaving directory '/home/pi/work/game-and-watch-retro-go'
+make[1]: Entering directory '/home/pi/work/game-and-watch-retro-go'
+[ BASH ] Checking for updated roms
+[ BIN ] gw_retro_go_extflash.bin
+scripts/flash_multi.sh build/gw_retro_go_extflash.bin 4194304
+Preparing chunk 1 / 10 in file /tmp/flash_chunk.niFx2W
+Flashing!
+Open On-Chip Debugger 0.12.0+dev-00616-gc5358c84a-dirty (2024-06-23-16:00)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+Info : The selected transport took over low-level target control. The results might differ compared to plain JTAG/SWD
+none separate
+Info : clock speed 1800 kHz
+Info : STLINK V2J29S7 (API v2) VID:PID 0483:3748
+Info : Target voltage: 3.130705
+Info : [stm32h7x.cpu0] Cortex-M7 r1p1 processor detected
+Info : [stm32h7x.cpu0] target has 8 breakpoints, 4 watchpoints
+Error: [stm32h7x.cpu0] Execution of event examine-end failed:
+read_memory: failed to read memory
+Info : [stm32h7x.cpu0] Examination succeed
+Info : starting gdb server for stm32h7x.cpu0 on 3333
+Info : Listening on port 3333 for gdb connections
+Error: [stm32h7x.cpu0] Execution of event examine-end failed:
+embedded:startup.tcl:1353: Error: read_memory: failed to read memory
+in procedure 'ocd_process_reset' 
+in procedure 'ocd_process_reset_inner' called at file "embedded:startup.tcl", line 1353
+
+Flashing chunk 0 failed... power cycle unit and retry? (y/n)
+y
+Retry count 2/10
+Open On-Chip Debugger 0.12.0+dev-00616-gc5358c84a-dirty (2024-06-23-16:00)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+Info : The selected transport took over low-level target control. The results might differ compared to plain JTAG/SWD
+none separate
+Info : clock speed 1800 kHz
+Info : STLINK V2J29S7 (API v2) VID:PID 0483:3748
+Info : Target voltage: 3.130705
+Info : [stm32h7x.cpu0] Cortex-M7 r1p1 processor detected
+Info : [stm32h7x.cpu0] target has 8 breakpoints, 4 watchpoints
+Info : [stm32h7x.cpu0] Examination succeed
+Info : starting gdb server for stm32h7x.cpu0 on 3333
+Info : Listening on port 3333 for gdb connections
+[stm32h7x.cpu0] halted due to debug-request, current mode: Thread 
+xPSR: 0x01000000 pc: 0x0801ad48 msp: 0x2001b620
+0x20020000
+0x08115601
+msp (/32): 0x20020000
+pc (/32): 0x08115601
+Starting flash app
+State: FLASHAPP_INIT
+Ready!
+Loading data
+Open On-Chip Debugger 0.12.0+dev-00616-gc5358c84a-dirty (2024-06-23-16:00)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+Info : The selected transport took over low-level target control. The results might differ compared to plain JTAG/SWD
+none separate
+Info : clock speed 1800 kHz
+Info : STLINK V2J29S7 (API v2) VID:PID 0483:3748
+Info : Target voltage: 3.129153
+Info : [stm32h7x.cpu0] Cortex-M7 r1p1 processor detected
+Info : [stm32h7x.cpu0] target has 8 breakpoints, 4 watchpoints
+Info : [stm32h7x.cpu0] Examination succeed
+Info : starting gdb server for stm32h7x.cpu0 on 3333
+Info : Listening on port 3333 for gdb connections
+Warn : target was in unknown state when halt was requested
+[stm32h7x.cpu0] halted due to debug-request, current mode: Thread 
+xPSR: 0x61000000 pc: 0x081018ce msp: 0x2001fe50
+Loading image into RAM
+851968 bytes written at address 0x24025800
+downloaded 851968 bytes in 8.562551s (97.167 KiB/s)
+65 bytes written at address 0x2000069c
+downloaded 65 bytes in 0.001436s (44.204 KiB/s)
+Starting flash process
+Please see the LCD for interactive status.
+State: FLASHAPP_CHECK_HASH_RAM
+State: FLASHAPP_ERASE
+State: FLASHAPP_ERASE
+State: FLASHAPP_ERASE
+State: FLASHAPP_ERASE
+State: FLASHAPP_ERASE
+State: FLASHAPP_ERASE
+State: FLASHAPP_ERASE
+State: FLASHAPP_ERASE
+State: FLASHAPP_ERASE
+State: FLASHAPP_ERASE
+State: FLASHAPP_ERASE
+State: FLASHAPP_ERASE
+State: FLASHAPP_ERASE
+State: FLASHAPP_ERASE
+State: FLASHAPP_ERASE
+State: FLASHAPP_ERASE
+State: FLASHAPP_ERASE
+State: FLASHAPP_ERASE
+State: FLASHAPP_ERASE
+State: FLASHAPP_ERASE
+State: FLASHAPP_ERASE
+State: FLASHAPP_ERASE
+State: FLASHAPP_ERASE
+State: FLASHAPP_ERASE
+State: FLASHAPP_ERASE
+State: FLASHAPP_ERASE
+State: FLASHAPP_ERASE
+State: FLASHAPP_ERASE
+State: FLASHAPP_ERASE
+State: FLASHAPP_ERASE
+State: FLASHAPP_ERASE
+State: FLASHAPP_ERASE
+State: FLASHAPP_ERASE
+State: FLASHAPP_ERASE
+State: FLASHAPP_ERASE
+State: FLASHAPP_ERASE
+State: FLASHAPP_ERASE
+State: FLASHAPP_ERASE
+State: FLASHAPP_ERASE
+State: FLASHAPP_ERASE
+State: FLASHAPP_ERASE
+State: FLASHAPP_ERASE
+State: FLASHAPP_ERASE
+State: FLASHAPP_ERASE
+State: FLASHAPP_ERASE
+State: FLASHAPP_PROGRAM
+State: FLASHAPP_PROGRAM
+Done, more chunks left!
+
+
+Programming of chunk 1 / 10 succeeded.
+
+
+Preparing chunk 2 / 10 in file /tmp/flash_chunk.uEruw3
+Flashing!
+Ready!
+Loading data
+Open On-Chip Debugger 0.12.0+dev-00616-gc5358c84a-dirty (2024-06-23-16:00)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+Info : The selected transport took over low-level target control. The results might differ compared to plain JTAG/SWD
+none separate
+Info : clock speed 1800 kHz
+Info : STLINK V2J29S7 (API v2) VID:PID 0483:3748
+Info : Target voltage: 3.129153
+Info : [stm32h7x.cpu0] Cortex-M7 r1p1 processor detected
+Info : [stm32h7x.cpu0] target has 8 breakpoints, 4 watchpoints
+Info : [stm32h7x.cpu0] Examination succeed
+Info : starting gdb server for stm32h7x.cpu0 on 3333
+Info : Listening on port 3333 for gdb connections
+Warn : target was in unknown state when halt was requested
+[stm32h7x.cpu0] halted due to debug-request, current mode: Thread 
+xPSR: 0x61000000 pc: 0x081018ce msp: 0x2001fe50
+Loading image into RAM
+851968 bytes written at address 0x24025800
+downloaded 851968 bytes in 8.552778s (97.278 KiB/s)
+65 bytes written at address 0x2000069c
+downloaded 65 bytes in 0.001492s (42.545 KiB/s)
+Starting flash process
+Please see the LCD for interactive status.
+State: FLASHAPP_CHECK_HASH_RAM
+State: FLASHAPP_PROGRAM
+State: FLASHAPP_PROGRAM
+Done, more chunks left!
+
+
+Programming of chunk 2 / 10 succeeded.
+
+
+Preparing chunk 3 / 10 in file /tmp/flash_chunk.fHwxrG
+Flashing!
+Ready!
+Loading data
+Open On-Chip Debugger 0.12.0+dev-00616-gc5358c84a-dirty (2024-06-23-16:00)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+Info : The selected transport took over low-level target control. The results might differ compared to plain JTAG/SWD
+none separate
+Info : clock speed 1800 kHz
+Info : STLINK V2J29S7 (API v2) VID:PID 0483:3748
+Info : Target voltage: 3.129153
+Info : [stm32h7x.cpu0] Cortex-M7 r1p1 processor detected
+Info : [stm32h7x.cpu0] target has 8 breakpoints, 4 watchpoints
+Info : [stm32h7x.cpu0] Examination succeed
+Info : starting gdb server for stm32h7x.cpu0 on 3333
+Info : Listening on port 3333 for gdb connections
+Warn : target was in unknown state when halt was requested
+[stm32h7x.cpu0] halted due to debug-request, current mode: Thread 
+xPSR: 0x61000000 pc: 0x081018ce msp: 0x2001fe50
+Loading image into RAM
+851968 bytes written at address 0x24025800
+downloaded 851968 bytes in 8.559389s (97.203 KiB/s)
+65 bytes written at address 0x2000069c
+downloaded 65 bytes in 0.001515s (41.899 KiB/s)
+Starting flash process
+Please see the LCD for interactive status.
+State: FLASHAPP_CHECK_HASH_RAM
+State: FLASHAPP_PROGRAM
+State: FLASHAPP_PROGRAM
+Done, more chunks left!
+
+
+Programming of chunk 3 / 10 succeeded.
+
+
+Preparing chunk 4 / 10 in file /tmp/flash_chunk.hAinEv
+Flashing!
+Ready!
+Loading data
+Open On-Chip Debugger 0.12.0+dev-00616-gc5358c84a-dirty (2024-06-23-16:00)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+Info : The selected transport took over low-level target control. The results might differ compared to plain JTAG/SWD
+none separate
+Info : clock speed 1800 kHz
+Info : STLINK V2J29S7 (API v2) VID:PID 0483:3748
+Info : Target voltage: 3.129153
+Info : [stm32h7x.cpu0] Cortex-M7 r1p1 processor detected
+Info : [stm32h7x.cpu0] target has 8 breakpoints, 4 watchpoints
+Info : [stm32h7x.cpu0] Examination succeed
+Info : starting gdb server for stm32h7x.cpu0 on 3333
+Info : Listening on port 3333 for gdb connections
+Warn : target was in unknown state when halt was requested
+[stm32h7x.cpu0] halted due to debug-request, current mode: Thread 
+xPSR: 0x61000000 pc: 0x081018ce msp: 0x2001fe50
+Loading image into RAM
+851968 bytes written at address 0x24025800
+downloaded 851968 bytes in 8.556315s (97.238 KiB/s)
+65 bytes written at address 0x2000069c
+downloaded 65 bytes in 0.001590s (39.922 KiB/s)
+Starting flash process
+Please see the LCD for interactive status.
+State: FLASHAPP_ERASE_NEXT
+State: FLASHAPP_PROGRAM
+State: FLASHAPP_PROGRAM
+Done, more chunks left!
+
+
+Programming of chunk 4 / 10 succeeded.
+
+
+Preparing chunk 5 / 10 in file /tmp/flash_chunk.5P83he
+Flashing!
+Ready!
+Loading data
+Open On-Chip Debugger 0.12.0+dev-00616-gc5358c84a-dirty (2024-06-23-16:00)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+Info : The selected transport took over low-level target control. The results might differ compared to plain JTAG/SWD
+none separate
+Info : clock speed 1800 kHz
+Info : STLINK V2J29S7 (API v2) VID:PID 0483:3748
+Info : Target voltage: 3.130705
+Info : [stm32h7x.cpu0] Cortex-M7 r1p1 processor detected
+Info : [stm32h7x.cpu0] target has 8 breakpoints, 4 watchpoints
+Info : [stm32h7x.cpu0] Examination succeed
+Info : starting gdb server for stm32h7x.cpu0 on 3333
+Info : Listening on port 3333 for gdb connections
+Warn : target was in unknown state when halt was requested
+[stm32h7x.cpu0] halted due to debug-request, current mode: Thread 
+xPSR: 0x61000000 pc: 0x081018ce msp: 0x2001fe50
+Loading image into RAM
+851968 bytes written at address 0x24025800
+downloaded 851968 bytes in 8.548951s (97.322 KiB/s)
+65 bytes written at address 0x2000069c
+downloaded 65 bytes in 0.001866s (34.017 KiB/s)
+Starting flash process
+Please see the LCD for interactive status.
+State: FLASHAPP_CHECK_HASH_RAM
+State: FLASHAPP_PROGRAM
+State: FLASHAPP_PROGRAM
+Done, more chunks left!
+
+
+Programming of chunk 5 / 10 succeeded.
+
+
+Preparing chunk 6 / 10 in file /tmp/flash_chunk.OFzr41
+Flashing!
+Ready!
+Loading data
+Open On-Chip Debugger 0.12.0+dev-00616-gc5358c84a-dirty (2024-06-23-16:00)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+Info : The selected transport took over low-level target control. The results might differ compared to plain JTAG/SWD
+none separate
+Info : clock speed 1800 kHz
+Info : STLINK V2J29S7 (API v2) VID:PID 0483:3748
+Info : Target voltage: 3.129153
+Info : [stm32h7x.cpu0] Cortex-M7 r1p1 processor detected
+Info : [stm32h7x.cpu0] target has 8 breakpoints, 4 watchpoints
+Info : [stm32h7x.cpu0] Examination succeed
+Info : starting gdb server for stm32h7x.cpu0 on 3333
+Info : Listening on port 3333 for gdb connections
+Warn : target was in unknown state when halt was requested
+[stm32h7x.cpu0] halted due to debug-request, current mode: Thread 
+xPSR: 0x61000000 pc: 0x081018ce msp: 0x2001fe50
+Loading image into RAM
+851968 bytes written at address 0x24025800
+downloaded 851968 bytes in 8.569897s (97.084 KiB/s)
+65 bytes written at address 0x2000069c
+downloaded 65 bytes in 0.001467s (43.270 KiB/s)
+Starting flash process
+Please see the LCD for interactive status.
+State: FLASHAPP_CHECK_HASH_RAM
+State: FLASHAPP_PROGRAM
+State: FLASHAPP_PROGRAM
+Done, more chunks left!
+
+
+Programming of chunk 6 / 10 succeeded.
+
+
+Preparing chunk 7 / 10 in file /tmp/flash_chunk.YZ4bBJ
+Flashing!
+Ready!
+Loading data
+Open On-Chip Debugger 0.12.0+dev-00616-gc5358c84a-dirty (2024-06-23-16:00)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+Info : The selected transport took over low-level target control. The results might differ compared to plain JTAG/SWD
+none separate
+Info : clock speed 1800 kHz
+Info : STLINK V2J29S7 (API v2) VID:PID 0483:3748
+Info : Target voltage: 3.129153
+Info : [stm32h7x.cpu0] Cortex-M7 r1p1 processor detected
+Info : [stm32h7x.cpu0] target has 8 breakpoints, 4 watchpoints
+Info : [stm32h7x.cpu0] Examination succeed
+Info : starting gdb server for stm32h7x.cpu0 on 3333
+Info : Listening on port 3333 for gdb connections
+Warn : target was in unknown state when halt was requested
+[stm32h7x.cpu0] halted due to debug-request, current mode: Thread 
+xPSR: 0x61000000 pc: 0x081018ce msp: 0x2001fe50
+Loading image into RAM
+851968 bytes written at address 0x24025800
+downloaded 851968 bytes in 8.561940s (97.174 KiB/s)
+65 bytes written at address 0x2000069c
+downloaded 65 bytes in 0.001502s (42.261 KiB/s)
+Starting flash process
+Please see the LCD for interactive status.
+State: FLASHAPP_PROGRAM_NEXT
+State: FLASHAPP_PROGRAM
+State: FLASHAPP_PROGRAM
+Done, more chunks left!
+
+
+Programming of chunk 7 / 10 succeeded.
+
+
+Preparing chunk 8 / 10 in file /tmp/flash_chunk.Xsl6iD
+Flashing!
+Ready!
+Loading data
+Open On-Chip Debugger 0.12.0+dev-00616-gc5358c84a-dirty (2024-06-23-16:00)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+Info : The selected transport took over low-level target control. The results might differ compared to plain JTAG/SWD
+none separate
+Info : clock speed 1800 kHz
+Info : STLINK V2J29S7 (API v2) VID:PID 0483:3748
+Info : Target voltage: 3.129153
+Info : [stm32h7x.cpu0] Cortex-M7 r1p1 processor detected
+Info : [stm32h7x.cpu0] target has 8 breakpoints, 4 watchpoints
+Info : [stm32h7x.cpu0] Examination succeed
+Info : starting gdb server for stm32h7x.cpu0 on 3333
+Info : Listening on port 3333 for gdb connections
+Warn : target was in unknown state when halt was requested
+[stm32h7x.cpu0] halted due to debug-request, current mode: Thread 
+xPSR: 0x61000000 pc: 0x081018ce msp: 0x2001fe50
+Loading image into RAM
+851968 bytes written at address 0x24025800
+downloaded 851968 bytes in 8.552692s (97.279 KiB/s)
+65 bytes written at address 0x2000069c
+downloaded 65 bytes in 0.001921s (33.043 KiB/s)
+Starting flash process
+Please see the LCD for interactive status.
+State: FLASHAPP_CHECK_HASH_RAM
+State: FLASHAPP_PROGRAM
+State: FLASHAPP_PROGRAM
+Done, more chunks left!
+
+
+Programming of chunk 8 / 10 succeeded.
+
+
+Preparing chunk 9 / 10 in file /tmp/flash_chunk.8LAWWW
+Flashing!
+Ready!
+Loading data
+Open On-Chip Debugger 0.12.0+dev-00616-gc5358c84a-dirty (2024-06-23-16:00)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+Info : The selected transport took over low-level target control. The results might differ compared to plain JTAG/SWD
+none separate
+Info : clock speed 1800 kHz
+Info : STLINK V2J29S7 (API v2) VID:PID 0483:3748
+Info : Target voltage: 3.129153
+Info : [stm32h7x.cpu0] Cortex-M7 r1p1 processor detected
+Info : [stm32h7x.cpu0] target has 8 breakpoints, 4 watchpoints
+Info : [stm32h7x.cpu0] Examination succeed
+Info : starting gdb server for stm32h7x.cpu0 on 3333
+Info : Listening on port 3333 for gdb connections
+Warn : target was in unknown state when halt was requested
+[stm32h7x.cpu0] halted due to debug-request, current mode: Thread 
+xPSR: 0x61000000 pc: 0x081018ce msp: 0x2001fe50
+Loading image into RAM
+851968 bytes written at address 0x24025800
+downloaded 851968 bytes in 8.547929s (97.334 KiB/s)
+65 bytes written at address 0x2000069c
+downloaded 65 bytes in 0.001777s (35.721 KiB/s)
+Starting flash process
+Please see the LCD for interactive status.
+State: FLASHAPP_CHECK_HASH_RAM
+State: FLASHAPP_PROGRAM
+State: FLASHAPP_CHECK_HASH_FLASH
+Done, more chunks left!
+
+
+Programming of chunk 9 / 10 succeeded.
+
+
+Preparing chunk 10 / 10 in file /tmp/flash_chunk.nwMwwe
+Flashing!
+Ready!
+Loading data
+Open On-Chip Debugger 0.12.0+dev-00616-gc5358c84a-dirty (2024-06-23-16:00)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+Info : The selected transport took over low-level target control. The results might differ compared to plain JTAG/SWD
+none separate
+Info : clock speed 1800 kHz
+Info : STLINK V2J29S7 (API v2) VID:PID 0483:3748
+Info : Target voltage: 3.129153
+Info : [stm32h7x.cpu0] Cortex-M7 r1p1 processor detected
+Info : [stm32h7x.cpu0] target has 8 breakpoints, 4 watchpoints
+Info : [stm32h7x.cpu0] Examination succeed
+Info : starting gdb server for stm32h7x.cpu0 on 3333
+Info : Listening on port 3333 for gdb connections
+Warn : target was in unknown state when halt was requested
+[stm32h7x.cpu0] halted due to debug-request, current mode: Thread 
+xPSR: 0x61000000 pc: 0x081018ce msp: 0x2001fe50
+Loading image into RAM
+716357 bytes written at address 0x24025800
+downloaded 716357 bytes in 7.203799s (97.111 KiB/s)
+65 bytes written at address 0x2000069c
+downloaded 65 bytes in 0.001874s (33.872 KiB/s)
+Starting flash process
+Please see the LCD for interactive status.
+State: FLASHAPP_PROGRAM_NEXT
+State: FLASHAPP_PROGRAM
+State: FLASHAPP_PROGRAM
+Done!
+
+
+Programming of chunk 10 / 10 succeeded.
+
+
+Programming of the external flash succeeded.
+
+
+make[1]: Leaving directory '/home/pi/work/game-and-watch-retro-go'
+make[1]: warning: jobserver unavailable: using -j1.  Add '+' to parent make rule.
+make[1]: Entering directory '/home/pi/work/game-and-watch-retro-go'
+# Reset the DBGMCU configuration register (DBGMCU_CR)
+Open On-Chip Debugger 0.12.0+dev-00616-gc5358c84a-dirty (2024-06-23-16:00)
+Licensed under GNU GPL v2
+For bug reports, read
+	http://openocd.org/doc/doxygen/bugs.html
+Info : The selected transport took over low-level target control. The results might differ compared to plain JTAG/SWD
+none separate
+Info : clock speed 1800 kHz
+Info : STLINK V2J29S7 (API v2) VID:PID 0483:3748
+Info : Target voltage: 3.129153
+Info : [stm32h7x.cpu0] Cortex-M7 r1p1 processor detected
+Info : [stm32h7x.cpu0] target has 8 breakpoints, 4 watchpoints
+Info : [stm32h7x.cpu0] Examination succeed
+Info : starting gdb server for stm32h7x.cpu0 on 3333
+Info : Listening on port 3333 for gdb connections
+[stm32h7x.cpu0] halted due to debug-request, current mode: Thread 
+xPSR: 0x01000000 pc: 0x0801ad48 msp: 0x2001b620
+make[1]: Leaving directory '/home/pi/work/game-and-watch-retro-go'
+pi@NanoPi-M4:~/work/game-and-watch-retro-go$ cd ..
+pi@NanoPi-M4:~/work$ git clone --recurse-submodules https://github.com/BrianPugh/game-and-watch-patch.git
+Cloning into 'game-and-watch-patch'...
+remote: Enumerating objects: 2035, done.
+remote: Counting objects: 100% (534/534), done.
+remote: Compressing objects: 100% (293/293), done.
+remote: Total 2035 (delta 251), reused 387 (delta 233), pack-reused 1501
+Receiving objects: 100% (2035/2035), 1.38 MiB | 69.00 KiB/s, done.
+Resolving deltas: 100% (1252/1252), done.
